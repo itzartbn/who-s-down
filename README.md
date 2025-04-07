@@ -1,5 +1,3 @@
-
-=======
 # 👀 Who's Down Application
 
 A simple and powerful tool to check which **servers**, **gateways**, **switches**, **routers**, or **computers** are down in your network — **in seconds**.
