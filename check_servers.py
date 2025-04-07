@@ -35,8 +35,10 @@ def check_servers():
         print("The following servers are not responding:")
         for name, ip in down_servers:
             print(f"{name} ({ip})")
+            input("Press Enter to exit...")
     else:
         print("All servers are up.")
+        input("Press Enter to exit...")
 
 if __name__ == "__main__":
     check_servers()
