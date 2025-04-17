@@ -3,42 +3,41 @@ import multiprocessing
 
 SERVER_LIST_FILE = "servers.txt"
 
-def load_servers(filename):
-    """Load servers from a file. Each line should contain 'name ip_address'."""
+def load_servers():
+    """Load servers from the servers.txt file."""
     servers = []
-    with open(filename, "r") as file:
-        for line in file:
-            parts = line.strip().split()
-            if len(parts) == 2:
-                servers.append((parts[0], parts[1]))
+    if os.path.exists(SERVER_LIST_FILE):
+        with open(SERVER_LIST_FILE, "r") as f:
+            for line in f:
+                parts = line.strip().split()
+                if len(parts) == 2:
+                    servers.append((parts[0], parts[1]))
     return servers
 
+def save_servers(servers):
+    """Save the current server list to servers.txt."""
+    with open(SERVER_LIST_FILE, "w") as f:
+        for name, ip in servers:
+            f.write(f"{name} {ip}\n")
+
+def add_server(name, ip):
+    servers = load_servers()
+    servers.append((name, ip))
+    save_servers(servers)
+
+def remove_server_by_name(name):
+    servers = load_servers()
+    servers = [s for s in servers if s[0] != name]
+    save_servers(servers)
+
 def ping_server(server):
-    """Ping a server and return its name & IP if it's down (Windows version)."""
     name, ip = server
-    response = os.system(f"ping -n 1 -w 2000 {ip} >nul")
-    if response != 0:
-        return name, ip
+    result = os.system(f"ping -n 1 -w 2000 {ip} >nul")
+    if result != 0:
+        return f"{name} ({ip})"
     return None
 
-
-def check_servers():
-    """Check all servers in parallel and report any that are down."""
-    servers = load_servers(SERVER_LIST_FILE)
-    
-    with multiprocessing.Pool(processes=len(servers)) as pool:
+def check_servers(servers):
+    with multiprocessing.Pool(processes=min(10, len(servers))) as pool:
         results = pool.map(ping_server, servers)
-    
-    down_servers = [res for res in results if res]  # Filter out None values
-
-    if down_servers:
-        print("The following servers are not responding:")
-        for name, ip in down_servers:
-            print(f"{name} ({ip})")
-            input("Press Enter to exit...")
-    else:
-        print("All servers are up.")
-        input("Press Enter to exit...")
-
-if __name__ == "__main__":
-    check_servers()
+    return [r for r in results if r]

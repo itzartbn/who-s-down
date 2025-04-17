@@ -8,7 +8,11 @@ yahoo 98.137.11.163
 github 140.82.112.3
 stackoverflow 151.101.1.69
 openAI 104.22.1.46
-wikipedia 208.80.154.224
 reddit 151.101.65.140
 digitalocean 138.197.63.241
 linode 96.126.119.121
+chewtube 74.125.130.93
+wroner 120.200.200.500
+wikipedia 192.165.239.50
+test 1921.4.4.3
+test2 192.5.4.3
